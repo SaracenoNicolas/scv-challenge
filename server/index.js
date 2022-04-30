@@ -9,31 +9,31 @@ let investments_data = [
     id: 1,
     name: "Coca Cola",
     type: "STOCK",
-    value: 0.5,
+    value: 2000,
   },
   {
     id: 2,
     name: "Apple",
     type: "STOCK",
-    value: 1.0
+    value: 5000
   },
   {
     id: 3,
     name: "Microsoft",
     type: "STOCK",
-    value: 1.5
+    value: 1500
   },
   {
     id: 4,
     name: "Google",
     type: "STOCK",
-    value: 2.0
+    value: 3000
   },
   {
     id: 5,
     name: "Bono A23",
     type: "BOND",
-    value: 200,
+    value: 100,
   },
   {
     id: 6,
@@ -51,7 +51,7 @@ let investments_data = [
     id: 8,
     name: "Bono T30",
     type: "BOND",
-    value: 111,
+    value: 240,
   },
 
 ]
@@ -67,7 +67,7 @@ let userData = {
       "holdings": 3000,
     }
   ],
-  "cash": 5000,
+  "cash": 50000,
 }
 
 // End of Application data
