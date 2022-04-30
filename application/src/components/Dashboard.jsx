@@ -2,13 +2,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AppContext from '../contexts/App';
 import HoldingsGraph from './HoldingsGraph';
+import Operations from './Operations';
 import { Container, Row, Col, Stack } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 
 const Dashboard = () => {
-  const { investments } = useContext(AppContext)
+  const { investments, selectedInvestment, setSelectedInvestment } = useContext(AppContext)
   const [availableInvestments, setAvailableInvestments] = useState([])
   const [loadingData, setLoadingData] = useState(true)
   const [holdings, setHoldings] = useState({})
@@ -52,7 +53,7 @@ const Dashboard = () => {
                           <tr key={investment.id}>
                             <td>{investment.name}</td>
                             <td>{investment.holdings} unidades</td>
-                            <td><Button variant="primary">Operate</Button></td>
+                            <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operate</Button></td>
                           </tr>
                         ))}
                       </tbody>
@@ -71,7 +72,7 @@ const Dashboard = () => {
                           <tr key={investment.id}>
                             <td>{investment.name}</td>
                             <td>AR$ {investment.value} / unidades</td>
-                            <td><Button variant="primary">Operate</Button></td>
+                            <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operate</Button></td>
                           </tr>
                         ))}
                       </tbody>
@@ -82,7 +83,7 @@ const Dashboard = () => {
             </Stack>
           </Col>
           <Col sm={7}>
-            <HoldingsGraph userHoldings={holdings}/>
+            {selectedInvestment ? <Operations userHoldings={holdings}/> : <HoldingsGraph userHoldings={holdings}/>}
           </Col>
         </Row>
       </Container>

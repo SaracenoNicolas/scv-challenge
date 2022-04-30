@@ -6,7 +6,8 @@ export default AppContext;
 
 export function AppContextProvider({ children }) {
   const [investments, setInvestments] = useState([]);
-  const [loadingData, setLoadingData] = useState(true)
+  const [loadingData, setLoadingData] = useState(true);
+  const [selectedInvestment, setSelectedInvestment] = useState(null);
 
   useEffect(() => {
     // populate bond and stocks data
@@ -22,7 +23,9 @@ export function AppContextProvider({ children }) {
     !loadingData &&
     <AppContext.Provider
       value={{
-        investments
+        investments,
+        selectedInvestment,
+        setSelectedInvestment
       }}
     >
       {children}
