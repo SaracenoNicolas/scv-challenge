@@ -77,6 +77,15 @@ app.get("/api/investments", (req, res) => {
   res.json(investments_data);
 });
 
+// Return an investment by ID
+app.get("/api/investments/:id", (req, res) => {
+  const investment = investments_data.find(investment => investment.id === parseInt(req.params.id));
+  if (!investment) {
+    return res.status(404).send("The investment with the given ID was not found.");
+  }
+  res.json(investment);
+});
+
 // (there is no user but this should be by user ID)
 app.get("/api/holdings", (req, res) => {
   let responseJson = userData;
