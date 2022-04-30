@@ -14,7 +14,7 @@ const HoldingsGraph = ({userHoldings}) => {
     // Safety check to wait for the context to be filled
     if (investments === undefined || investments.length === 0) return;
 
-    let total = 0;
+    let total = userHoldings.cash;
     let preparePieData = [
       { title: 'Caja de Ahorro', value: userHoldings.cash, color: '#0088FE' },
     ];
