@@ -2,23 +2,32 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AppContext from '../contexts/App';
 import HoldingsGraph from './HoldingsGraph';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Stack } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 
 const Dashboard = () => {
   const { investments } = useContext(AppContext)
+  const [availableInvestments, setAvailableInvestments] = useState([])
   const [loadingData, setLoadingData] = useState(true)
   const [holdings, setHoldings] = useState({})
 
   useEffect(() => {
+    setLoadingData(true)
     // Get user Data
     fetch('api/holdings')
     .then(response => response.json())
     .then(data => {
       setHoldings(data);
-      setLoadingData(false)
+      // separate all the investments from the ones the user already have.
+      let investmentDifferences = investments.filter(investment => {
+        return !data.investments.find(i => i.id === investment.id)
+      });
+
+      setAvailableInvestments(investmentDifferences);
+
+      setLoadingData(false);
     });
   }, [])
   
@@ -27,38 +36,50 @@ const Dashboard = () => {
       <Container>
         <Row>
           <Col sm={5}>
-            <Card>
-              <Card.Body>
-                <Card.Title>My Investments</Card.Title>
+            <Stack gap={2}>
+              <Card>
                 <Card.Body>
-                  <Table hover>
-                    <tbody>
-                      <tr key={1}>
-                        <td>Caja de Ahorro</td>
-                        <td>AR$ {holdings.cash}</td>
-                        <td></td>
-                      </tr>
-                      {holdings.investments.map((investment) => (
-                        <tr key={investment.id}>
-                          <td>{investment.name}</td>
-                          <td>{investment.holdings} unidades</td>
-                          <td><Button variant="primary">Operate</Button></td>
+                  <Card.Title>My Investments</Card.Title>
+                  <Card.Body>
+                    <Table hover>
+                      <tbody>
+                        <tr key={1}>
+                          <td>Caja de Ahorro</td>
+                          <td>AR$ {holdings.cash}</td>
+                          <td></td>
                         </tr>
-                      ))}
-                    </tbody>
+                        {holdings.investments.map((investment) => (
+                          <tr key={investment.id}>
+                            <td>{investment.name}</td>
+                            <td>{investment.holdings} unidades</td>
+                            <td><Button variant="primary">Operate</Button></td>
+                          </tr>
+                        ))}
+                      </tbody>
 
-                  </Table>
+                    </Table>
+                  </Card.Body>
                 </Card.Body>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-                <Card.Title>Other Invesments</Card.Title>
-                <Card.Text>
-                  TODO: Available Invesments List
-                </Card.Text>
-              </Card.Body>
-            </Card>
+              </Card>
+              <Card>
+                <Card.Body>
+                  <Card.Title>Other Invesments</Card.Title>
+                  <Card.Body>
+                    <Table hover>
+                      <tbody>
+                        {availableInvestments.map((investment) => (
+                          <tr key={investment.id}>
+                            <td>{investment.name}</td>
+                            <td>AR$ {investment.value} / unidades</td>
+                            <td><Button variant="primary">Operate</Button></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card.Body>
+              </Card>
+            </Stack>
           </Col>
           <Col sm={7}>
             <HoldingsGraph userHoldings={holdings}/>
