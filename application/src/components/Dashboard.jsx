@@ -1,6 +1,7 @@
 // landing page.
 import React, { useState, useEffect, useContext } from 'react';
 import AppContext from '../contexts/App';
+import HoldingsGraph from './HoldingsGraph';
 import { Container, Row, Col } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table'
@@ -60,7 +61,7 @@ const Dashboard = () => {
             </Card>
           </Col>
           <Col sm={7}>
-            some cool holding diagram / operations window
+            <HoldingsGraph userHoldings={holdings}/>
           </Col>
         </Row>
       </Container>
