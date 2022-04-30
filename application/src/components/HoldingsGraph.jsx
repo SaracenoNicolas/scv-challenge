@@ -33,7 +33,7 @@ const HoldingsGraph = ({userHoldings}) => {
 
     setPieData(preparePieData);
     setTotalInvestments(total);
-  }, [investments])
+  }, [])
 
   const pieLabel = ({ x, y, dx, dy, dataEntry }) => {
     return (
