@@ -7,6 +7,7 @@ import { Container, Row, Col, Stack } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
+import { FormatCurrency } from '../utils';
 
 const Dashboard = () => {
   const { investments, selectedInvestment, setSelectedInvestment } = useContext(AppContext)
@@ -46,7 +47,7 @@ const Dashboard = () => {
                       <tbody>
                         <tr key={1}>
                           <td>Caja de Ahorro</td>
-                          <td>AR$ {holdings.cash}</td>
+                          <td>{FormatCurrency(holdings.cash)}</td>
                           <td></td>
                         </tr>
                         {holdings.investments.map((investment) => (
@@ -71,7 +72,7 @@ const Dashboard = () => {
                         {availableInvestments.map((investment) => (
                           <tr key={investment.id}>
                             <td>{investment.name}</td>
-                            <td>AR$ {investment.value} / unidades</td>
+                            <td>{FormatCurrency(investment.value)} / unidades</td>
                             <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operar</Button></td>
                           </tr>
                         ))}

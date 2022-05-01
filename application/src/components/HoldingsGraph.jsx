@@ -4,6 +4,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import AppContext from '../contexts/App';
 import { PieChart } from 'react-minimal-pie-chart';
 import { Stack } from 'react-bootstrap';
+import { FormatCurrency } from '../utils';
 
 const HoldingsGraph = ({userHoldings}) => {
   const { investments } = useContext(AppContext)
@@ -46,7 +47,7 @@ const HoldingsGraph = ({userHoldings}) => {
         textAnchor="middle"
         style={{ fontSize: "2px" }}
       >
-        {`${dataEntry.title} (AR$ ${dataEntry.value})`}
+        {`${dataEntry.title} (${FormatCurrency(dataEntry.value)})`}
       </text>
     );
   };
@@ -54,7 +55,7 @@ const HoldingsGraph = ({userHoldings}) => {
   return (
     <Stack gap={3}>
       <div style={{textAlign: 'center'}}>
-        <h2>Valor Total Cartera: AR$ {totalInvestments}</h2>
+        <h2>Valor Total Cartera: {FormatCurrency(totalInvestments)}</h2>
       </div>
       <div>
         <PieChart

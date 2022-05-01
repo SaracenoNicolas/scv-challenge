@@ -10,7 +10,8 @@ const ACTION_CARD_BODY_STYLE = {
 }
 
 let calculateValue = (value, amount) => {
-  return `AR$ ${value * amount}`
+  const formattedNumber = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value * amount)
+  return `AR ${formattedNumber}`
 }
 
 const Operations = ({ userHoldings }) => {
