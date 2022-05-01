@@ -1,8 +1,6 @@
 const express = require("express");
+var bodyParser = require('body-parser')
 
-const PORT = process.env.PORT || 3001;
-
-const app = express();
 // Application data, this one should be persisted in a database
 let investments_data = [
   {
@@ -55,7 +53,6 @@ let investments_data = [
   },
 
 ]
-
 let userData = {
   "investments": [
     {
@@ -69,8 +66,16 @@ let userData = {
   ],
   "cash": 50000,
 }
-
 // End of Application data
+
+const PORT = process.env.PORT || 3001;
+
+const app = express();
+
+// Set body parser
+// parse various different custom JSON types as JSON
+app.use(bodyParser.json({ type: 'application/json' }))
+// End set body parser
 
 // Return the available stocks
 app.get("/api/investments", (req, res) => {
@@ -109,19 +114,19 @@ app.get("/api/holdings", (req, res) => {
 
 // Operate user investment
 // I tried to use the body here but it does not work, the body comes empty and I do not know why, so i use query string instead
-app.post("/api/holdings/:id/:amount", (req, res) => {
-  let userInvestment = userData.investments.find(investment => investment.id === parseInt(req.params.id));
+app.post("/api/holdings/", (req, res) => {
+  let userInvestment = userData.investments.find(investment => investment.id === parseInt(req.body.id));
   
   if (userInvestment) {
-    userInvestment.holdings += parseInt(req.params.amount);
+    userInvestment.holdings += parseInt(req.body.amount);
     // All the holdings where sold, so we need to remove the investment from the user investments
     if (userInvestment.holdings === 0) {
-      userData.investments = userData.investments.filter(investment => investment.id !== parseInt(req.params.id));
+      userData.investments = userData.investments.filter(investment => investment.id !== parseInt(req.body.id));
     }
   } else {
     userData.investments.push({
-      id: parseInt(req.params.id),
-      holdings: parseInt(req.params.amount)
+      id: parseInt(req.body.id),
+      holdings: parseInt(req.body.amount)
     });
   }
 
