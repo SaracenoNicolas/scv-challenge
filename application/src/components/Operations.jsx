@@ -1,6 +1,7 @@
 // component for the operations to sell and buy
 import React, { useState, useEffect, useContext } from 'react';
 import AppContext from '../contexts/App';
+import ToastContext from '../contexts/Toast';
 import { Stack, Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button'
 
@@ -10,6 +11,7 @@ let calculateValue = (value, amount) => {
 
 const Operations = ({ userHoldings }) => {
   const { selectedInvestment, refreshData } = useContext(AppContext)
+  const { setToastOptions, setShowToast } = useContext(ToastContext)
   const [investmentToOperate, setInvestmentToOperate] = useState({})
   const [loadingData, setLoadingData] = useState(true)
   const [subscription, setSubscription] = useState(0)
@@ -41,6 +43,12 @@ const Operations = ({ userHoldings }) => {
     })
     .then(response => response.json())
     .then(() => {
+      setToastOptions({
+        variant: 'success',
+        header: 'Bought!',
+        body: `Succesfully bought ${buyAmount} units of ${selectedInvestment.name}`
+      })
+      setShowToast(true);
       refreshData();
     })
   }
@@ -51,6 +59,13 @@ const Operations = ({ userHoldings }) => {
     })
     .then(response => response.json())
     .then(() => {
+      setToastOptions({
+        variant: 'warning',
+        header: 'Sold!',
+        body: `Succesfully sold ${sellAmount} units of ${selectedInvestment.name}`
+
+      })
+      setShowToast(true);
       refreshData();
     })
   }
@@ -105,6 +120,7 @@ const Operations = ({ userHoldings }) => {
           </Card.Body>
         </Card>
       }
+      <Button variant="link" onClick={refreshData}>Cancel Operation</Button>
     </Stack>
   )
 }
