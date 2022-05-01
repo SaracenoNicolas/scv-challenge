@@ -9,7 +9,9 @@ export function AppContextProvider({ children }) {
   const [loadingData, setLoadingData] = useState(true);
   const [selectedInvestment, setSelectedInvestment] = useState(null);
 
-  useEffect(() => {
+  const refreshData = () => {
+    setLoadingData(true);
+    setSelectedInvestment(null);
     // populate bond and stocks data
     fetch('api/investments')
     .then(response => response.json())
@@ -17,6 +19,11 @@ export function AppContextProvider({ children }) {
       setInvestments(data);
       setLoadingData(false);
     });
+
+  }
+
+  useEffect(() => {
+    refreshData();
   }, []);
 
   return (
@@ -25,7 +32,8 @@ export function AppContextProvider({ children }) {
       value={{
         investments,
         selectedInvestment,
-        setSelectedInvestment
+        setSelectedInvestment,
+        refreshData
       }}
     >
       {children}
