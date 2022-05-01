@@ -5,6 +5,10 @@ import ToastContext from '../contexts/Toast';
 import { Stack, Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button'
 
+const ACTION_CARD_BODY_STYLE = {
+  display: 'flex', gap: '10px 20px'
+}
+
 let calculateValue = (value, amount) => {
   return `AR$ ${value * amount}`
 }
@@ -38,8 +42,17 @@ const Operations = ({ userHoldings }) => {
   }, [selectedInvestment])
 
   const handleBuyAction = () => {
-    fetch('api/holdings/'+selectedInvestment.id+'/'+buyAmount, {
+    const payload = {
+      id: selectedInvestment.id,
+      amount: buyAmount
+    }
+
+    fetch('api/holdings', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
     })
     .then(response => response.json())
     .then(() => {
@@ -54,16 +67,24 @@ const Operations = ({ userHoldings }) => {
   }
 
   const handleSellAction = () => {
-    fetch(`api/holdings/${selectedInvestment.id}/${sellAmount * -1}`, {
+    const payload = {
+      id: selectedInvestment.id,
+      amount: sellAmount * -1
+    }
+
+    fetch('api/holdings', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
     })
     .then(response => response.json())
     .then(() => {
       setToastOptions({
-        variant: 'warning',
+        variant: 'success',
         header: 'Sold!',
         body: `Succesfully sold ${sellAmount} units of ${selectedInvestment.name}`
-
       })
       setShowToast(true);
       refreshData();
@@ -87,7 +108,7 @@ const Operations = ({ userHoldings }) => {
       </Card>
       <Card>
         <Card.Body>
-          <div style={{display: 'flex', gap: '10px 20px'}}>
+          <div style={ACTION_CARD_BODY_STYLE}>
             <input
               type="number"
               value={buyAmount}
@@ -104,7 +125,7 @@ const Operations = ({ userHoldings }) => {
       { subscription != 0 && 
         <Card>
           <Card.Body>
-            <div style={{display: 'flex', gap: '10px 20px'}}>
+            <div style={ACTION_CARD_BODY_STYLE}>
               <input
                 type="number"
                 max={subscription}
