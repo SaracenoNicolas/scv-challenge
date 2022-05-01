@@ -58,8 +58,8 @@ const Operations = ({ userHoldings }) => {
     .then(() => {
       setToastOptions({
         variant: 'success',
-        header: 'Bought!',
-        body: `Succesfully bought ${buyAmount} units of ${selectedInvestment.name}`
+        header: 'Comprada Realizada!',
+        body: `Compraste ${buyAmount} unidades de ${selectedInvestment.name} por un total de ${calculateValue(investmentToOperate.value, buyAmount)}`
       })
       setShowToast(true);
       refreshData();
@@ -82,9 +82,9 @@ const Operations = ({ userHoldings }) => {
     .then(response => response.json())
     .then(() => {
       setToastOptions({
-        variant: 'success',
-        header: 'Sold!',
-        body: `Succesfully sold ${sellAmount} units of ${selectedInvestment.name}`
+        variant: 'warning',
+        header: 'Venta Realizada!',
+        body: `Vendiste ${sellAmount} unidades de ${selectedInvestment.name} por un total de ${calculateValue(investmentToOperate.value, sellAmount)}`
       })
       setShowToast(true);
       refreshData();
@@ -97,10 +97,10 @@ const Operations = ({ userHoldings }) => {
         <h2>{investmentToOperate.name}</h2>
       </div>
       <Card>
-        <Card.Header>My holdings</Card.Header>
+        <Card.Header>Valores</Card.Header>
         <Card.Body>
           <Stack gap={1}>
-            <span>Cantidad Subscripta: {subscription != 0 ? subscription + ' unidades' : 'Not Subscribed'}</span>
+            <span>Cantidad Subscripta: {subscription != 0 ? subscription + ' unidades' : 'No posee'}</span>
             <span>Cotizacion: AR$ {investmentToOperate.value} / Unidad</span>
             { subscription != 0 && <span> Valoracion Actual: AR$ {calculateValue(investmentToOperate.value, subscription)}</span> }
           </Stack>
@@ -141,7 +141,7 @@ const Operations = ({ userHoldings }) => {
           </Card.Body>
         </Card>
       }
-      <Button variant="link" onClick={refreshData}>Cancel Operation</Button>
+      <Button variant="link" onClick={refreshData}>Cancelar Operacion</Button>
     </Stack>
   )
 }

@@ -36,7 +36,7 @@ const Dashboard = () => {
       !loadingData && 
       <Container>
         <Row>
-          <Col sm={5}>
+          <Col lg={5} md={12}>
             <Stack gap={2}>
               <Card>
                 <Card.Body>
@@ -53,7 +53,7 @@ const Dashboard = () => {
                           <tr key={investment.id}>
                             <td>{investment.name}</td>
                             <td>{investment.holdings} unidades</td>
-                            <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operate</Button></td>
+                            <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operar</Button></td>
                           </tr>
                         ))}
                       </tbody>
@@ -72,7 +72,7 @@ const Dashboard = () => {
                           <tr key={investment.id}>
                             <td>{investment.name}</td>
                             <td>AR$ {investment.value} / unidades</td>
-                            <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operate</Button></td>
+                            <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operar</Button></td>
                           </tr>
                         ))}
                       </tbody>
@@ -82,7 +82,7 @@ const Dashboard = () => {
               </Card>
             </Stack>
           </Col>
-          <Col sm={7}>
+          <Col lg={7} md={12}>
             {selectedInvestment ? <Operations userHoldings={holdings}/> : <HoldingsGraph userHoldings={holdings}/>}
           </Col>
         </Row>
