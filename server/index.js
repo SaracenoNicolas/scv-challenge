@@ -91,6 +91,19 @@ app.get("/api/investments/:id", (req, res) => {
   res.json(investment);
 });
 
+// Update an investment by ID
+app.put("/api/investments", (req, res) => {
+  console.log(res.body)
+  const investment = investments_data.find(investment => investment.id === parseInt(req.body.id));
+  if (!investment) {
+    return res.status(404).send("The investment with the given ID was not found.");
+  }
+
+  investment.value = req.body.value;
+
+  res.json(investments_data);
+})
+
 // (there is no user but this should be by user ID) Get the user list of investments
 app.get("/api/holdings", (req, res) => {
   let responseJson = {
