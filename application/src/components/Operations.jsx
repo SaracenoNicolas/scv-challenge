@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AppContext from '../contexts/App';
 import { Stack, Card } from 'react-bootstrap';
-import InputGroup from 'react-bootstrap/InputGroup'
 import Button from 'react-bootstrap/Button'
 
 let calculateValue = (value, amount) => {
@@ -10,7 +9,7 @@ let calculateValue = (value, amount) => {
 }
 
 const Operations = ({ userHoldings }) => {
-  const { selectedInvestment, setSelectedInvestment } = useContext(AppContext)
+  const { selectedInvestment, refreshData } = useContext(AppContext)
   const [investmentToOperate, setInvestmentToOperate] = useState({})
   const [loadingData, setLoadingData] = useState(true)
   const [subscription, setSubscription] = useState(0)
@@ -41,8 +40,8 @@ const Operations = ({ userHoldings }) => {
       method: 'POST',
     })
     .then(response => response.json())
-    .then(data => {
-      setSelectedInvestment(undefined);
+    .then(() => {
+      refreshData();
     })
   }
 
@@ -50,8 +49,9 @@ const Operations = ({ userHoldings }) => {
     fetch(`api/holdings/${selectedInvestment.id}/${sellAmount * -1}`, {
       method: 'POST',
     })
-    .then(data => {
-      setSelectedInvestment(undefined);
+    .then(response => response.json())
+    .then(() => {
+      refreshData();
     })
   }
 
@@ -76,10 +76,11 @@ const Operations = ({ userHoldings }) => {
             <input
               type="number"
               value={buyAmount}
+              placeholder="Cantidad a comprar"
               onChange={(e) => setBuyAmount(e.target.value)}
             />
             <span style={{alignSelf: 'center'}}>{calculateValue(investmentToOperate.value, buyAmount)}</span>
-            <Button variant="primary" onClick={handleBuyAction}>
+            <Button variant="primary" onClick={handleBuyAction} disabled={buyAmount <= 0}>
               Comprar
             </Button>
           </div>
@@ -88,17 +89,19 @@ const Operations = ({ userHoldings }) => {
       { subscription != 0 && 
         <Card>
           <Card.Body>
-          <div style={{display: 'flex', gap: '10px 20px'}}>
-            <input
-              type="number"
-              value={sellAmount}
-              onChange={(e) => setSellAmount(e.target.value)}
-            />
-            <span style={{alignSelf: 'center'}}>{calculateValue(investmentToOperate.value, sellAmount)}</span>
-            <Button variant="primary" onClick={handleSellAction}>
-              Comprar
-            </Button>
-          </div>
+            <div style={{display: 'flex', gap: '10px 20px'}}>
+              <input
+                type="number"
+                max={subscription}
+                placeholder="Cantidad a vender"
+                value={sellAmount}
+                onChange={(e) => setSellAmount(e.target.value)}
+              />
+              <span style={{alignSelf: 'center'}}>{calculateValue(investmentToOperate.value, sellAmount)}</span>
+              <Button variant="primary" onClick={handleSellAction} disabled={sellAmount <= 0 || sellAmount > subscription}>
+                Vender
+              </Button>
+            </div>
           </Card.Body>
         </Card>
       }
