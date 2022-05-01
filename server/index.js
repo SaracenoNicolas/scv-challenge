@@ -93,7 +93,6 @@ app.get("/api/investments/:id", (req, res) => {
 
 // Update an investment by ID
 app.put("/api/investments", (req, res) => {
-  console.log(res.body)
   const investment = investments_data.find(investment => investment.id === parseInt(req.body.id));
   if (!investment) {
     return res.status(404).send("The investment with the given ID was not found.");
