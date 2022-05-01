@@ -1,15 +1,21 @@
 // component for the operations to sell and buy
-// component to show total holdings value in a graphic
-// landing page.
 import React, { useState, useEffect, useContext } from 'react';
 import AppContext from '../contexts/App';
 import { Stack, Card } from 'react-bootstrap';
+import InputGroup from 'react-bootstrap/InputGroup'
+import Button from 'react-bootstrap/Button'
+
+let calculateValue = (value, amount) => {
+  return `AR$ ${value * amount}`
+}
 
 const Operations = ({ userHoldings }) => {
-  const { selectedInvestment } = useContext(AppContext)
+  const { selectedInvestment, setSelectedInvestment } = useContext(AppContext)
   const [investmentToOperate, setInvestmentToOperate] = useState({})
   const [loadingData, setLoadingData] = useState(true)
   const [subscription, setSubscription] = useState(0)
+  const [buyAmount, setBuyAmount] = useState(0)
+  const [sellAmount, setSellAmount] = useState(0)
 
   useEffect(() => {
     setLoadingData(true);
@@ -30,6 +36,25 @@ const Operations = ({ userHoldings }) => {
     });
   }, [selectedInvestment])
 
+  const handleBuyAction = () => {
+    fetch('api/holdings/'+selectedInvestment.id+'/'+buyAmount, {
+      method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+      setSelectedInvestment(undefined);
+    })
+  }
+
+  const handleSellAction = () => {
+    fetch(`api/holdings/${selectedInvestment.id}/${sellAmount * -1}`, {
+      method: 'POST',
+    })
+    .then(data => {
+      setSelectedInvestment(undefined);
+    })
+  }
+
   return !loadingData && (
     <Stack gap={4}>
       <div style={{textAlign: 'center'}}>
@@ -41,20 +66,42 @@ const Operations = ({ userHoldings }) => {
           <Stack gap={1}>
             <span>Cantidad Subscripta: {subscription != 0 ? subscription + ' unidades' : 'Not Subscribed'}</span>
             <span>Cotizacion: AR$ {investmentToOperate.value} / Unidad</span>
-            { subscription != 0 && <span> Valoracion Actual: AR$ {subscription * investmentToOperate.value}</span> }
+            { subscription != 0 && <span> Valoracion Actual: AR$ {calculateValue(investmentToOperate.value, subscription)}</span> }
           </Stack>
         </Card.Body>
       </Card>
       <Card>
         <Card.Body>
-          COMPRAR
+          <div style={{display: 'flex', gap: '10px 20px'}}>
+            <input
+              type="number"
+              value={buyAmount}
+              onChange={(e) => setBuyAmount(e.target.value)}
+            />
+            <span style={{alignSelf: 'center'}}>{calculateValue(investmentToOperate.value, buyAmount)}</span>
+            <Button variant="primary" onClick={handleBuyAction}>
+              Comprar
+            </Button>
+          </div>
         </Card.Body>
       </Card>
-      <Card>
-        <Card.Body>
-          VENDER
-        </Card.Body>
-      </Card>
+      { subscription != 0 && 
+        <Card>
+          <Card.Body>
+          <div style={{display: 'flex', gap: '10px 20px'}}>
+            <input
+              type="number"
+              value={sellAmount}
+              onChange={(e) => setSellAmount(e.target.value)}
+            />
+            <span style={{alignSelf: 'center'}}>{calculateValue(investmentToOperate.value, sellAmount)}</span>
+            <Button variant="primary" onClick={handleSellAction}>
+              Comprar
+            </Button>
+          </div>
+          </Card.Body>
+        </Card>
+      }
     </Stack>
   )
 }

@@ -86,18 +86,47 @@ app.get("/api/investments/:id", (req, res) => {
   res.json(investment);
 });
 
-// (there is no user but this should be by user ID)
+// (there is no user but this should be by user ID) Get the user list of investments
 app.get("/api/holdings", (req, res) => {
-  let responseJson = userData;
+  let responseJson = {
+    investments: [],
+    cash: userData.cash,
+  };
 
-  responseJson.investments.forEach((invesment, idx) => {
+  userData.investments.forEach((invesment) => {
     let investmentData = investments_data.find(investment => investment.id === invesment.id);
-    responseJson.investments[idx].name = investmentData.name;
-    responseJson.investments[idx].type = investmentData.type;
+    let newUserInvestment = {
+      id: investmentData.id,
+      name: investmentData.name,
+      type: investmentData.type,
+      holdings: invesment.holdings,
+    }
+    responseJson.investments.push(newUserInvestment);
   })
 
   res.json(responseJson);
 });
+
+// Operate user investment
+// I tried to use the body here but it does not work, the body comes empty and I do not know why, so i use query string instead
+app.post("/api/holdings/:id/:amount", (req, res) => {
+  let userInvestment = userData.investments.find(investment => investment.id === parseInt(req.params.id));
+  
+  if (userInvestment) {
+    userInvestment.holdings += parseInt(req.params.amount);
+    // All the holdings where sold, so we need to remove the investment from the user investments
+    if (userInvestment.holdings === 0) {
+      userData.investments = userData.investments.filter(investment => investment.id !== parseInt(req.params.id));
+    }
+  } else {
+    userData.investments.push({
+      id: parseInt(req.params.id),
+      holdings: parseInt(req.params.amount)
+    });
+  }
+
+  res.json(userData);
+})
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
