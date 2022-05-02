@@ -125,7 +125,6 @@ app.get("/api/holdings", (req, res) => {
 });
 
 // Operate user investment
-// I tried to use the body here but it does not work, the body comes empty and I do not know why, so i use query string instead
 app.post("/api/holdings/", (req, res) => {
   let userInvestment = userData.investments.find(investment => investment.id === parseInt(req.body.id));
   
