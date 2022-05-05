@@ -41,7 +41,7 @@ const Dashboard = () => {
             <Stack gap={2}>
               <Card>
                 <Card.Body>
-                  <Card.Title>My Investments</Card.Title>
+                  <Card.Title>Mis Inversiones</Card.Title>
                   <Card.Body>
                     <Table hover>
                       <tbody>
@@ -65,14 +65,14 @@ const Dashboard = () => {
               </Card>
               <Card>
                 <Card.Body>
-                  <Card.Title>Other Invesments</Card.Title>
+                  <Card.Title>Otras Inversiones</Card.Title>
                   <Card.Body>
                     <Table hover>
                       <tbody>
                         {availableInvestments.map((investment) => (
                           <tr key={investment.id}>
                             <td>{investment.name}</td>
-                            <td>{FormatCurrency(investment.value)} / unidades</td>
+                            <td>{FormatCurrency(investment.value)} / unidad</td>
                             <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operar</Button></td>
                           </tr>
                         ))}
