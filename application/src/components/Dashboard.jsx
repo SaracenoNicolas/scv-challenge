@@ -67,17 +67,21 @@ const Dashboard = () => {
                 <Card.Body>
                   <Card.Title>Otras Inversiones</Card.Title>
                   <Card.Body>
-                    <Table hover>
-                      <tbody>
-                        {availableInvestments.map((investment) => (
-                          <tr key={investment.id}>
-                            <td>{investment.name}</td>
-                            <td>{FormatCurrency(investment.value)} / unidad</td>
-                            <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operar</Button></td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
+                    {availableInvestments.length > 0 ? (
+                      <Table hover>
+                        <tbody>
+                          {availableInvestments.map((investment) => (
+                            <tr key={investment.id}>
+                              <td>{investment.name}</td>
+                              <td>{FormatCurrency(investment.value)} / unidad</td>
+                              <td><Button variant="primary" onClick={() => setSelectedInvestment(investment)}>Operar</Button></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    ) : (
+                      <p>No hay inversiones disponibles</p>
+                    )}
                   </Card.Body>
                 </Card.Body>
               </Card>
